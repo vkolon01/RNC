@@ -73,7 +73,7 @@ function intToRoman(integerNumber){
         var romanOnes = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
         var romanTens = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"];
         var romanHundreds = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"];
-        var romanThousends = ["", "M", "MM", "MMM", "MMMM"];
+        var romanThousands = ["", "M", "MM", "MMM", "MMMM"];
         var numberSize = splitNumber.length;
         var romanNumber = [];
         for(var i = numberSize; i > 0; --i){
@@ -85,7 +85,7 @@ function intToRoman(integerNumber){
             }else if(i == numberSize -2){
                 romanNumber.unshift(romanHundreds[curNum])
             }else{
-                romanNumber.unshift(romanThousends[curNum])
+                romanNumber.unshift(romanThousands[curNum])
             }
         }
         fulfill({arabic:integerNumber,roman:romanNumber.join("")}); //Returns a converted roman number with type string
