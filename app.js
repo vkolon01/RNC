@@ -265,6 +265,4 @@ function reset(){
     romanNumerals = [new RomanOne(romanCharacters[0],1),new RomanFive(romanCharacters[1],5),new RomanOne(romanCharacters[2],10),new RomanFive(romanCharacters[3],50),new RomanOne(romanCharacters[4],100),new RomanFive(romanCharacters[5],500),new RomanOne(romanCharacters[6],1000)];
 }
 
-var server = app.listen(5000,function(){
-    console.log('Listening on port ' + server.address().port);
-});
+module.exports = app;
