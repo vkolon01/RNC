@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "mocha test/test.js"
+    "alternative": "nodemon server_alternative.js",
+    "test": "mocha test/test.js",
+    "test_alternative" : "mocha test/test_alternative.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +17,7 @@
     "mongoose": "^4.11.3",
     "promise": "^8.0.1",
     "reload": "^2.2.2",
+    "roman-numerals": "^0.3.2",
     "validator": "^8.1.0"
   },
   "devDependencies": {

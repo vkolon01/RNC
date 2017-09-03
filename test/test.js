@@ -2,12 +2,32 @@ var chai = require('chai');
 var chaiHttp = require('chai-http');
 var expect = chai.expect;
 var request = require('supertest');
+var app = require('../app');
 
 describe('Integrated Testing:',function(){
     const OK = 200,
        BAD_REQUEST = 400,
        NOT_FOUND = 404,
        INTERNAL_SERVER_ERROR = 500;
+
+    var arabicTestingValues = {
+        tooLarge : [5000, BAD_REQUEST],
+        negative : [-10, BAD_REQUEST],
+        double : [10.3,BAD_REQUEST],
+        zero : [0, BAD_REQUEST],
+        ok : [30, OK],
+        NaN : ['RANDY', BAD_REQUEST]
+    };
+    var romanTestingValues = {
+        tooLarge : ['MMMMM', BAD_REQUEST],
+        badCharacter : ['CXA', BAD_REQUEST],
+        upper_and_lowercase : ['xiI',OK],
+        zero : [0, BAD_REQUEST],
+        ok : [30, OK],
+        NaN : ['RANDY', BAD_REQUEST],
+        illegalNumberStructure : ['IXI', BAD_REQUEST]
+    };
+
     var server = require('../server');
     describe('Routing',function(){
         describe('/roman',function(){
@@ -19,30 +39,30 @@ describe('Integrated Testing:',function(){
                     .get('/BAD_URL')
                     .expect(NOT_FOUND,done);
             });
-            it('/10 should return OK',function(done){
+            it('/between_1_and_4999 should return OK',function(done){
                 request(server)
-                    .get('/roman/10')
-                    .expect(OK,done);
+                    .get('/roman/' + arabicTestingValues.ok[0])
+                    .expect(arabicTestingValues.ok[1],done);
             });
             it('/:negative_number should return BAD_REQUEST',function(done){
                 request(server)
-                    .get('/roman/-10')
-                    .expect(BAD_REQUEST,done);
+                    .get('/roman/' + arabicTestingValues.negative[0])
+                    .expect(arabicTestingValues.negative[1],done);
             });
             it('/:too_large_number should return BAD_REQUEST',function(done){
                 request(server)
-                    .get('/roman/5000')
-                    .expect(BAD_REQUEST,done);
+                    .get('/roman/' + arabicTestingValues.tooLarge[0])
+                    .expect(arabicTestingValues.tooLarge[1],done);
             });
             it('/not_a_number should return BAD_REQUEST',function (done){
                 request(server)
-                    .get('/roman/not_a_number')
-                    .expect(BAD_REQUEST,done)
+                    .get('/roman/' + arabicTestingValues.NaN[0])
+                    .expect(arabicTestingValues.NaN[1],done)
             });
             it('/type_double should return BAD_REQUEST',function(done) {
                 request(server)
-                    .get('/roman/10.5')
-                    .expect(BAD_REQUEST, done);
+                    .get('/roman/' + arabicTestingValues.double[0])
+                    .expect(arabicTestingValues.NaN[1], done);
             });
         });
         describe('/arabic',function(){
@@ -51,23 +71,23 @@ describe('Integrated Testing:',function(){
             });
             it('/UpperCase and lowerCase should return OK',function(done){
                 request(server)
-                    .get('/arabic/mIx')
-                    .expect(OK,done);
+                    .get('/arabic/' + romanTestingValues.tooLarge[0])
+                    .expect(romanTestingValues.tooLarge[1],done);
             });
             it('/:too_large_number should return BAD_REQUEST',function(done){
                 request(server)
-                    .get('/arabic/5000')
-                    .expect(BAD_REQUEST,done);
+                    .get('/arabic/' + romanTestingValues.tooLarge[0])
+                    .expect(romanTestingValues.tooLarge[1],done);
             });
             it('/including_bad_character should return BAD_REQUEST',function (done){
                 request(server)
-                    .get('/arabic/IXW')
-                    .expect(BAD_REQUEST,done)
+                    .get('/arabic/' + romanTestingValues.badCharacter[0])
+                    .expect(romanTestingValues.badCharacter[1],done)
             });
-            it('/IXI should return BAD_REQUEST',function(done){
+            it('/illegal structure should return BAD_REQUEST',function(done){
                 request(server)
-                    .get('/arabic/IXI')
-                    .expect(BAD_REQUEST,done)
+                    .get('/arabic/' + romanTestingValues.illegalNumberStructure[0])
+                    .expect(romanTestingValues.illegalNumberStructure[1],done)
             });
         });
         describe('/all',function(){
@@ -87,6 +107,13 @@ describe('Integrated Testing:',function(){
                     })
 
             });
-        })
+        });
+        describe('/remove/all',function(){
+            it('should return OK',function(done){
+                request(server)
+                    .delete('/remove/all')
+                    .expect(OK,done)
+            })
+        });
     });
 });
