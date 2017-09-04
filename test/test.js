@@ -15,7 +15,7 @@ describe('Integrated Testing:',function(){
         negative : [-10, BAD_REQUEST],
         double : [10.3,BAD_REQUEST],
         zero : [0, BAD_REQUEST],
-        ok : [30, OK],
+        ok : [10, OK],
         NaN : ['RANDY', BAD_REQUEST]
     };
     var romanTestingValues = {
@@ -25,7 +25,7 @@ describe('Integrated Testing:',function(){
         zero : [0, BAD_REQUEST],
         ok : [30, OK],
         NaN : ['RANDY', BAD_REQUEST],
-        illegalNumberStructure : ['IXI', BAD_REQUEST]
+        illegalNumberStructure : ['IVI', BAD_REQUEST]
     };
 
     var server = require('../server');
@@ -98,7 +98,7 @@ describe('Integrated Testing:',function(){
             after(function(){
                 server.close();
             });
-            it('/should contain conversion of 10',function(done){
+            it('/should contain conversion of 10',function(done){ //Number 10 should still exist from the arabic to roman testing section.
                 request(server)
                     .get('/all/arabic')
                     .then(function(res){
