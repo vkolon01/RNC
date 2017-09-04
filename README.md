@@ -5,7 +5,7 @@ RNC is a CRUD api that runs on a local server. RNC allows the user to convert va
 
 **Installation:**
 
-1. Install <a href="https://www.nodejs.org">Node.js</a>. Node.js will also install npm.
+1. Install <a href="https://www.nodejs.org">Node.js</a>. This will also install npm.
 
 2. Install <a href="https://www.mongodb.com">MongoDB</a>.
 
@@ -22,8 +22,8 @@ RNC is a CRUD api that runs on a local server. RNC allows the user to convert va
 **Interface**
 Routes:
 <ul>
-    <li>**GET /roman/:number** Returns the arabic numeral input value and converted roman value</li>
-    <li>**GET /arabic/:number** Returns the roman numeral input value and converted arabic value</li>
-    <li>**GET /all/:numeralType** Returns all the previously converted values in a requested by the parameter numeral type</li>
-    <li>**DELETE /remove/all** Deletes the entire converted values collection on the database and returns status code 200 on success</li>
+    <li>GET /roman/:number Returns the arabic numeral input value and converted roman value</li>
+    <li>GET /arabic/:number Returns the roman numeral input value and converted arabic value</li>
+    <li>GET /all/:numeralType Returns all the previously converted values in a requested by the parameter numeral type</li>
+    <li>DELETE /remove/all Deletes the entire converted values collection on the database and returns status code 200 on success</li>
 </ul>
