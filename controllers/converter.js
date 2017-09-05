@@ -146,7 +146,7 @@ function romanToInt(param){
 function intToRoman(param){
     var badInputError = 'Please provide input of type Integer (between 0 and 3999)';
     return new Promise(function(fulfill,reject){
-        if(validator.isInt(param) && param > 0 && param < 5000){
+        if(validator.isInt(param) && param > 0 && param < 4000){
             var x = 0, z = x+1, count = 1;
             var result = [];
             var splitNumber = divideNumber(param);
