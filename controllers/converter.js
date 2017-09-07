@@ -17,24 +17,28 @@ router.get('/arabic/:number',convert);
 
  Please note that roman numerals have no concept of subtraction. The above statement is only a method to represent such number.
  */
+
+var errors = {
+    badRomanInput : 'Please provide input of roman numeral characters (I V X L C D or M)',
+    badIntInput : 'Please provide input of type Integer (between 0 and 3999)',
+    IllegalFormation : 'Number structure is incorrect',
+    maxCountReached : 'Character appeared more than the allowed threshold'
+};
 var romanNumerals = [];
 var romanCharacters = ['I', 'V', 'X', 'L', 'C', 'D', 'M'];
 
 function RomanNumber(symbol,value){
     this.symbol = symbol;
     this.count = 0;
-    this.modified = false;
     this.value = value;
 }
 function RomanOne(symbol,value){
     RomanNumber.call(this,symbol,value);
-    this.editor = true;
     this.maxCount = 3;
 
 }
 function RomanFive(symbol,value){
     RomanNumber.call(this,symbol,value);
-    this.editor = false;
     this.maxCount = 1;
 }
 
@@ -58,10 +62,16 @@ function convert(req,res){
             if(toArabic){
                 roman = req.params.number.toUpperCase();
                 romanToInt(roman).then(function(result){
-                    arabic = result;
-                    convertedValue = {inputValue: roman,convertedValue: arabic};
-                    res.json(convertedValue);
-                    recordConversion(roman,arabic);
+                    intToRoman('' + result).then(function(romanResult){
+                        if(romanResult == roman){
+                            arabic = result;
+                            convertedValue = {inputValue: roman,convertedValue: arabic};
+                            res.json(convertedValue);
+                            recordConversion(roman,arabic);
+                        }else{
+                            res.status(400).end(http.STATUS_CODES[400] + '\n' + errors.IllegalFormation);
+                        }
+                    })
                 },function(err){
                     res.status(400).end(http.STATUS_CODES[400] + '\n' + err);
                 })
@@ -94,30 +104,20 @@ function convert(req,res){
  * @param param
  * @returns converted number back to the user.
  * @returns error code 400 if bad input.
- * @returns error code 500 if MongoDB produces error.
+ * @returns error code 500 if MongoDB error.
  */
 function romanToInt(param){
     return new Promise(function(fulfill,reject){
-        var errors = {
-            badInput : 'Please provide input of roman numeral characters (I V X L C D or M)',
-            IllegalFormation : 'Characters V, L and D on the left-hand side cannot be larger than characters on the right-hand side',
-            maxCountReached : 'Character appeared more than the allowed threshold'
-        };
         var result = 0;
         var lastValue = 0;
         var splitNumber = param.split('');
-        //validateRomanNumber(splitNumber);
         for(var i = splitNumber.length - 1; i >= 0; i--) {
             if (romanCharacters.indexOf(splitNumber[i]) != -1){
                 romanNumerals.forEach(function(romanValue) {
                     if (romanValue.symbol == splitNumber[i]) {
                         if (romanValue.count < romanValue.maxCount) {
-                            if (lastValue > romanValue.value) { // Checks if should subtract or add.
-                                if (romanValue.editor) {
-                                    result -= romanValue.value;
-                                } else {
-                                    reject(errors.IllegalFormation);
-                                }
+                            if (lastValue > romanValue.value) {
+                                result -= romanValue.value;
                             } else {
                                 romanValue.count++;
                                 result += romanValue.value;
@@ -129,7 +129,7 @@ function romanToInt(param){
                     }
                 })
             }else{
-                reject(errors.badInput);
+                reject(errors.badRomanInput);
             }
         }
         fulfill(result);
@@ -144,7 +144,7 @@ function romanToInt(param){
  * @returns {*}
  */
 function intToRoman(param){
-    var badInputError = 'Please provide input of type Integer (between 0 and 3999)';
+    console.log(typeof param);
     return new Promise(function(fulfill,reject){
         if(validator.isInt(param) && param > 0 && param < 4000){
             var x = 0, z = x+1, count = 1;
@@ -170,7 +170,7 @@ function intToRoman(param){
             });
             fulfill(result.join(""));
         }else{
-            reject(badInputError);
+            reject(errors.badIntInput);
         }
     })
 }
