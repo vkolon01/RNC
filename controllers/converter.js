@@ -144,7 +144,6 @@ function romanToInt(param){
  * @returns {*}
  */
 function intToRoman(param){
-    console.log(typeof param);
     return new Promise(function(fulfill,reject){
         if(validator.isInt(param) && param > 0 && param < 4000){
             var x = 0, z = x+1, count = 1;
